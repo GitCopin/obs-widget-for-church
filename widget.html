@@ -1,0 +1,503 @@
+<html>
+<head>
+
+<style>
+@font-face {
+font-family: 'default-font';
+src: url('/fonts?name=Staatliches-Regular.ttf');
+}
+
+@font-face {
+font-family: 'redhatdisplay-font';
+src: url('/fonts?name=RedHatDisplay-Regular.ttf');
+}
+
+body {
+font-family: 'default-font';
+}
+
+.lower {
+width: 1330px;
+height: 260px;
+position: relative;
+top: 0px;
+left: -1400px;
+color: rgb(50 50 50);
+padding: 10px;
+box-sizing: border-box;
+font-size: 30px;
+filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.35));
+background-image: url('/images?name=lower-third');
+background-repeat: no-repeat;
+display: inline-block;
+
+/*animation-timing-function: steps(30,end);*/
+}
+
+.lower_layer2 {
+width: 1330px;
+height: 260px;
+position: relative;
+top: -220px;
+left: -1400px;
+color: rgb(50 50 50);
+padding: 10px;
+box-sizing: border-box;
+font-size: 30px;
+filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.35));
+background-image: url('/images?name=lower-third-layer2');
+background-repeat: no-repeat;
+display: inline-block;
+animation-delay: .25s;
+z-index: -1;
+}
+
+.line1 {
+position: fixed;
+left: 112px;
+top: 20px;
+font-size: 60pt;
+color: rgb(20 20 20);
+}
+
+.line2 {
+position: fixed;
+left: 112px;
+top: 124px;
+font-size: 29pt;
+font-weight: bold;
+color: rgb(250 250 250);
+}
+
+.line3 {
+position: fixed;
+left: 112px;
+top: 160px;
+font-size: 29pt;
+color: rgb(250 250 250);
+}
+
+.slide-in {
+animation-duration: 12s;
+animation-name: slide-in-ani;
+animation-fill-mode: forwards;
+}
+
+@keyframes slide-in-ani {
+from {left: -1400px;}
+25% {left: 0px;}
+75% {left: 0px;}
+to {left: -1400px;}
+}
+
+.upper_slide {
+width: 600px;
+height: 80px;
+background-color: rgb(40,40,40);
+color: rgb(230 230 230);
+position: fixed;
+top: 40px;
+right: -900px;
+padding: 5px;
+border-color: rgb(100,100,100);
+border-style: solid;
+border-radius: 3px;
+box-sizing: border-box;
+border-width: 1px;
+filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.35));
+}
+
+.upper_slide_image {
+width: 200px;
+height: 200px;
+position: inherit;
+left: -200px;
+top: 0px;
+background-color; rgb(40,40,40);
+}
+
+.upper_slide_line1 {
+font-size: 40px;
+padding: 5px;
+}
+
+.upper_slide_ani {
+animation-duration: 8s;
+animation-name: upper_slide_kf;
+animation-fill-mode: forwards;
+}
+
+@keyframes upper_slide_kf {
+from {right: -900px;}
+15% {right: -10px;}
+85% {right: -10px;}
+to {right: -900px;}
+}
+
+.countdown_master {
+width: 100vw;
+height: 100vh;
+background-color: rgb(30 30 30 / .25);
+background-repeat: no-repeat;
+background-position: center;
+background-image: url('/images?name=countdown_DTG');
+position: fixed;
+left: 0px;
+top: 0px;
+z-index: -10;
+}
+
+.countdown_in_ani {
+animation-duration: 2s;
+animation-name: countdown_in_kf;
+animation-fill-mode: forwards;
+}
+
+.countdown_out_ani {
+animation-duration: 2s;
+animation-name: countdown_out_kf;
+animation-fill-mode: forwards;
+}
+
+@keyframes countdown_in_kf {
+from {top: -100vh;}
+to {top: 0vh;}
+}
+
+@keyframes countdown_out_kf {
+from {top: 0vh;}
+to {top: -100vh;}
+}
+
+.countdown_number {
+font-size: 200px;
+width: 100vw;
+top: calc(50vh - 160px);
+position: relative;
+box-sizing: border-box;
+text-align: center;
+filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.35));
+}
+
+.countdown_line1 {
+position: relative;
+width: 100vw;
+top: calc(50vh - 445px);
+font-size: 60pt;
+text-align: center;
+color: rgb(30 30 30);
+}
+</style>
+
+</head>
+<body>
+<script>
+
+window.onload = function () {
+let serverIP = '0.0.0.0:0';
+
+var countdownSec = 99;
+var countdownId;
+
+// Reset busy status on server.
+(async () => {
+	const resp = await fetch(`http://${serverIP}/busy?set=false`);
+})();
+
+let sound = new Audio('/sounds?name=0013_cursor_click_11');
+
+let lower = document.getElementById("lower");
+let lowerLayer2 = document.getElementById("lower_layer2");
+
+let upper_slide_out = document.querySelector("#upper_slide_out");
+
+let lid = window.setTimeout(checkTrigger,1000);
+
+let line1 = document.querySelector("#line1");
+let line2 = document.querySelector("#line2");
+let line3 = document.querySelector("#line3");
+
+lower.addEventListener('animationend', () => {
+	console.log('lower third done.');
+	lower.classList.remove("slide-in");
+	lowerLayer2.classList.remove("slide-in");
+	
+	(async () => {
+		let wid = lower.getAttribute("wid");
+		lower.setAttribute("wid","");
+		lowerLayer2.setAttribute("wid","");
+		
+		console.log(`Set busy for ${wid} to false.`);
+		wid = encodeURIComponent(wid);
+		
+		const resp = await fetch(`http://${serverIP}/busy?set=false&wid=${wid}`);
+		let respObj = await resp.json();
+	})();
+		
+	window.clearTimeout(lid);
+	lid = window.setTimeout(checkTrigger,1000);
+	
+});
+
+upper_slide_out.addEventListener('animationend', () => {
+	console.log('upper slide out done.');
+	upper_slide_out.classList.remove("upper_slide_ani");
+	
+	(async () => {
+		let wid = upper_slide_out.getAttribute("wid");
+		upper_slide_out.setAttribute("wid","");
+		console.log(`Set busy for ${wid} to false.`);
+		wid = encodeURIComponent(wid);
+		
+		const resp = await fetch(`http://${serverIP}/busy?set=false&wid=${wid}`);
+		let respObj = await resp.json();
+	})();
+
+	window.clearTimeout(lid);
+	lid = window.setTimeout(checkTrigger,1000);
+	
+});
+
+async function showLower(wid) {
+	try {
+		console.log(sound);
+		await sound.play();
+	} catch(e) {
+		console.log(e);
+	}
+	lower.style.top = '780px';
+	lower.classList.add("slide-in");
+	lower.setAttribute("wid",wid);
+	
+	lowerLayer2.style.top = '520px';
+	lowerLayer2.classList.add("slide-in");
+	lowerLayer2.setAttribute("wid",wid);
+}
+
+async function showUpperSlide(wid) {
+	try {
+		console.log(sound);
+		await sound.play();
+	} catch(e) {
+		console.log(e);
+	}
+	upper_slide_out.classList.add("upper_slide_ani");
+	upper_slide_out.setAttribute("wid",wid);
+}
+
+async function checkTrigger() {
+	try {
+		const resp = await fetch(`http://${serverIP}/trigger`);
+		let respObj = await resp.json();
+		
+		if (respObj.txt) {
+			console.log(respObj);
+		
+			let txt = respObj.txt;
+			let wid;
+			let name;
+			let type;
+			let font;
+			
+			if (txt.hasOwnProperty('type')) {
+				type = encodeURIComponent(txt.type);
+			}
+			
+			if (txt.hasOwnProperty('font')) {
+				font = encodeURIComponent(txt.font);
+				console.log(`Setting widget font to ${font}`);
+				
+				let body = document.querySelector('body');
+				if (font) {
+					body.style.fontFamily = font;
+				}
+			} else {
+				let body = document.querySelector('body');
+				body.style.fontFamily = 'default-font';
+			}
+			
+			if (respObj.fire) {
+				console.log(respObj);
+				
+				if (type == 'lower-third') {
+				
+					if (txt.hasOwnProperty('line1')) {
+						line1.innerText = decodeURIComponent(txt.line1);
+					}
+					if (txt.hasOwnProperty('line2')) {
+						line2.innerText = decodeURIComponent(txt.line2);
+					}
+					if (txt.hasOwnProperty('line3')) {
+						line3.innerText = decodeURIComponent(txt.line3);
+					}
+					if (txt.hasOwnProperty('name')) {
+						name = encodeURIComponent(txt.name);
+					}					
+					if (txt.hasOwnProperty('wid')) {
+						wid = encodeURIComponent(txt.wid);
+					}
+					if (txt.hasOwnProperty('image')) {
+						lower.style.backgroundImage = `url('/images?name=${txt.image}')`;
+						lowerLayer2.style.backgroundImage = `url('/images?name=${txt.image}-layer2')`
+						console.log(`Setting lower third image to ${txt.image}`);
+					}
+					
+					showLower(wid);
+					const resp = await fetch(`http://${serverIP}/busy?set=true&wid=${wid}&type=${type}`);
+					let respTemp = await resp.json();
+				
+				} else if (type == 'upper-slide') {
+					let line1;
+					let name;
+					let wid;
+					
+					if (txt.hasOwnProperty('name')) {
+						name = encodeURIComponent(txt.name);
+					}
+					if (txt.hasOwnProperty('wid')) {
+						wid = encodeURIComponent(txt.wid);
+					}
+					if (txt.hasOwnProperty('line1')) {
+						line1 = decodeURIComponent(txt.line1);
+					}
+					
+					let upperSlideLine1 = document.querySelector('#upper_slide_line1');
+					
+					upperSlideLine1.innerText = line1;
+					
+					showUpperSlide(wid);
+					
+					const resp = await fetch(`http://${serverIP}/busy?set=true&wid=${wid}&type=${type}`);
+					let respTemp = await resp.json();
+				
+				} else if (type == 'countdown') {
+					let line1;
+					let startTime;
+					let name;
+					let wid;
+					let image;
+					
+					if (txt.hasOwnProperty('name')) {
+						name = encodeURIComponent(txt.name);
+					}
+					if (txt.hasOwnProperty('wid')) {
+						wid = encodeURIComponent(txt.wid);
+					}
+					if (txt.hasOwnProperty('line1')) {
+						line1 = decodeURIComponent(txt.line1);
+					}
+					if (txt.hasOwnProperty('line2')) {
+						startTime = decodeURIComponent(txt.line2);
+					}
+					if (txt.hasOwnProperty('image')) {
+						image = decodeURIComponent(txt.image);
+					}
+					
+					let countdownLine1 = document.querySelector('#countdown_line1');
+					let countdownMaster = document.querySelector('#countdown_master');
+					
+					if (name) {
+						countdownMaster.style.backgroundImage = `url('/images?name=${name}');`
+					}
+					
+					countdownLine1.innerText = line1;
+					
+					showCountdown(wid,startTime);
+					
+					const resp = await fetch(`http://${serverIP}/busy?set=true&wid=${wid}&type=${type}`);
+					let respTemp = await resp.json();
+					
+				}
+				
+				//return;
+			}
+		}
+
+	} catch (e) {
+		console.log(e);
+	}
+
+	lid = window.setTimeout(checkTrigger,1000);
+
+}
+
+function showCountdown(wid, startTime) {
+	countdownSec = startTime;
+	let countdownMaster = document.querySelector("#countdown_master");
+	let countdownNumber = document.querySelector("#countdown_number");
+	let countdownLine1 = document.querySelector("#countdown_line1");
+	
+	countdownMaster.style.display = '';
+	countdownMaster.classList.remove("countdown_out_ani");
+	countdownMaster.classList.add("countdown_in_ani");
+	countdownMaster.setAttribute("wid",wid);
+	//countdownNumber.innerText = countdownSec;
+	
+	if (countdownId) {
+		clearTimeout(countdownId);
+	}
+	
+	countdownCount();
+	//countdownId = window.setTimeout(countdownCount,1000);
+}
+
+function countdownCount() {
+	let countdownMaster = document.querySelector("#countdown_master");
+	let countdownNumber = document.querySelector("#countdown_number");
+	let countdownLine1 = document.querySelector("#countdown_line1");
+	
+	let countMin = Math.floor(countdownSec / 60);
+	let countSec = Math.floor(countdownSec - (countMin * 60));
+	if (countSec < 10) {
+		countSec = `0${countSec}`;
+	}
+	
+	if (countdownSec >= 0) {
+		
+		if (countMin > 0) {
+			countdownNumber.innerText = `${countMin}:${countSec}`;
+		} else {
+			countdownNumber.innerText = `:${countSec}`;
+		}
+		
+		countdownSec --;
+		countdownId = window.setTimeout(countdownCount,1000);
+		
+	} else if(countdownSec == -1) {
+		countdownMaster.classList.remove("countdown_in_ani");
+		countdownMaster.classList.add("countdown_out_ani");
+		
+		(async () => {
+			let wid = countdownMaster.getAttribute("wid");
+			countdownMaster.setAttribute("wid","");
+			console.log(`Set busy for ${wid} to false.`);
+			wid = encodeURIComponent(wid);
+			
+			const resp = await fetch(`http://${serverIP}/busy?set=false&wid=${wid}`);
+			let respObj = await resp.json();
+		})();
+	}
+	
+}
+
+}
+</script>
+<div id="upper_slide_out" class="upper_slide" name="">
+<div id="upper_slide_image" class="upper_slide_image" style=""></div>
+<div id="upper_slide_line1" class="upper_slide_line1">Test</div>
+</div>
+
+<div id="lower" class="lower" name="">
+<div id="line1" class="line1">Test</div>
+<div id="line2" class="line2">test</div>
+<div id="line3" class="line3">test</div>
+</div>
+<div id="lower_layer2" class="lower_layer2"></div>
+
+<div id="countdown_master" class="countdown_master" style="display: none">
+<div id="countdown_number" class="countdown_number">0</div>
+<div id="countdown_line1" class="countdown_line1">Countdown</div>
+</div>
+
+</body>
+</html>

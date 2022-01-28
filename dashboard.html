@@ -1,0 +1,1191 @@
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+
+<style>
+
+@font-face {
+font-family: 'default-font';
+src: url('/fonts?name=Staatliches-Regular.ttf');
+}
+
+body {
+background-color: rgb(28,39,54);
+font-family: 'default-font';
+}
+
+.take_panel {
+width: 100%;
+height: 70px;
+min-height: 60px;
+max-height: 80px;
+position: fixed;
+left: 0px;
+top: 0px;
+display: flex;
+background-color: rgb(8,19,34);
+z-index: 99;
+}
+
+.master_panel {
+display: flex;
+flex-wrap: wrap;
+width: 100%;
+height: auto;
+margin: 0px;
+padding: 10px;
+box-sizing: border-box;
+overflow: hidden;
+position: relative;
+top: 70px;
+}
+
+.panel {
+flex: 500px;
+flex: 300px;
+}
+
+.top_panel {
+display: flex;
+flex-wrap: wrap;
+flex: 100px;
+width: 100%;
+min-height: 35px;
+position: relative;
+top: 70px;
+justify-content: center;
+}
+
+.button_frame {
+width: calc(100% - 20px);
+display: flex;
+flex-flow: wrap;
+
+background-color: rgba(20, 20, 20, 0.25);
+height: auto;
+padding: 5px;
+margin: 10px;
+border-radius: 10px;
+box-sizing: border-box;
+}
+
+.button {
+width: calc(100% - 20px);
+height: 50px;
+max-height: 50px;
+min-width: 90px;
+min-height: 35px;
+font-size: clamp(10px, 6vmin, 17px);
+overflow:hidden;
+background-color:rgb(48,67,94);
+position: relative;
+border-radius: 5px;
+color: rgb(177,199,228);
+padding: 2px;
+margin: 10px;
+box-sizing: border-box;
+border: rgb(36,53,79) solid 1px;
+border-bottom-width: 6px;
+cursor: pointer;
+text-align: center;
+}
+
+.button_red {
+background-color: rgb(176, 60, 60);
+border-color: rgb(133, 39, 39);
+color: rgb(250, 180, 180);
+}
+
+.thin_button {
+width: calc(100% - 10px);
+max-width: 200px;
+min-width: 125px;
+overflow: hidden;
+height: 30px;
+position: relative;
+border-radius: 3px;
+background-color:rgb(48,67,94);
+margin: 10px;
+box-sizing: border-box;
+border: rgb(36,53,79) solid 1px;
+border-bottom-width: 6px;
+cursor: pointer;
+padding: 2px;
+margin: 5px;
+font-size: 15px;
+color: rgb(168,190,219);
+text-align: center;
+}
+
+.label {
+width: calc(100% - 40px);
+height: 12px;
+color: rgb(177,199,228);
+padding: 10px;
+box-sizing: border-box;
+text-align: left;
+font-size: 12px;
+}
+
+.button_clicked {
+animation-duration: 1s;
+animation-name: green_pulse;
+animation-iteration-count: 2;
+animation-direction: alternate;
+animation-play-state: running;
+}
+
+.button_clicked_err {
+animation-duration: 1s;
+animation-name: pulse;
+animation-iteration-count: 2;
+animation-direction: alternate;
+animation-play-state: running;
+}
+
+.button_armed {
+border-color: rgb(137,208,95);
+}
+
+.button_live {
+border-color: rgb(255,50,50);
+animation-duration: 1.25s;
+animation-name: pulse;
+animation-iteration-count: infinite;
+animation-direction: alternate;
+animation-play-state: running;
+}
+
+@keyframes pulse {
+from {border-color: rgb(255,50,50)}
+to {border-color: rgba(255,50,50,.45)}
+}
+
+@keyframes green_pulse {
+from {border-color: rgb(137,208,95)}
+to {border-color: rgba(137,208,95,.45)}
+}
+
+.status {
+width: 200px;
+height: 50px;
+max-height: 50px;
+min-height: 35px;
+min-width: 180px;
+font-size: clamp(10px, 6vmin, 20px);
+position: relative;
+color: rgb(177,199,228);
+padding-top: 12px;
+margin: 10px;
+box-sizing: border-box;
+border-radius: 5px;
+border: rgb(48,67,94) solid 1px;
+text-align: center;
+}
+
+#top_buttons .status {
+height: 30px;
+width: auto;
+margin: 5px;
+padding: 3px;
+padding-top: 6px;
+}
+
+.text_input {
+width: calc(100% - 10px);
+border-radius: 4px;
+padding: 5px;
+margin: 5px;
+background-color: rgb(28, 39, 54);
+border-width: 1px;
+border-color: rgb(48, 67, 94);
+border-style: solid;
+color: #c3ddff;
+font-size: clamp(10px, 6vmin, 16px);
+}
+
+.text_input_red {
+border-color: rgb(250,10,75);
+border-width: 2px;
+}
+
+.dashboard_error {
+width: calc(100% - 20px);
+margin: 10px;
+padding: 10px;
+border-radius: 5px;
+border: rgb(48,67,94) solid 1px;
+text-align: center;
+color: rgb(177,199,228);
+font-size: 16px;
+}
+
+.pup_master {
+width: 75vw;
+min-width: 340px;
+height: 75vh;
+min-height: 350px;
+top: 10px;
+position: fixed;
+left: calc(50% - 37.5vw);
+z-index: 100;
+background-color: rgba(171, 193, 221, 0.91);
+border-radius: 5px;
+border: rgb(48,67,94) solid 1px;
+filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.35));
+display: flex;
+}
+
+.pup_title {
+width: calc(100% - 20px);
+height: 30px;
+font-size: clamp(11px,3vw,16px);
+margin: 10px;
+padding: 5px;
+border-radius: 5px;
+border: rgb(48,67,94) solid 1px;
+color: rgb(36, 53, 79);
+box-sizing: border-box;
+}
+
+.create_dashboard_section {
+width: calc(50% - 10px);
+min-width: 160px;
+height: calc(100% - 70px);
+display: flex;
+flex-direction: column;
+border-radius: 10px;
+border-color: rgba(177,199,228,1);
+border-width: 1px;
+border-style: solid;
+margin: 5px;
+padding: 5px;
+box-sizing: border-box;
+}
+
+.button_group_panel {
+width: calc(100% - 10px);
+display: flex;
+flex-wrap: wrap;
+background-color: rgb(8, 19, 34);
+border-radius: 10px;
+border-color: rgba(157,179,207,.5);
+border-width: 1px;
+border-style: solid;
+margin: 5px;
+padding: 5px;
+box-sizing: border-box;
+}
+
+.button_group_title {
+margin: 5px;
+padding: 10px;
+border-radius: 10px;
+color: rgb(157, 179, 207);
+font-size: 17px;
+text-align: center;
+border-color: rgb(157,179,207);
+border-width: 1px;
+box-sizing: border-box;
+}
+
+.button_group {
+display: flex;
+flex-direction: column;
+flex: 50%;
+}
+
+#panel2 {
+flex: 300px;
+}
+
+@media screen and (max-width: 450px) {
+
+.pup_master {
+left: 0px;
+top: 0px;
+width: calc(100%);
+height: 100%;
+}
+
+}
+
+@media screen and (min-width: 1000px) {
+
+.button {
+width: calc(50% - 20px);
+}
+}
+
+.take_button {
+width: calc(100% - 20px);
+}
+
+.pup_button {
+width: calc(100% - 20px);
+}
+
+#close_pup_panel {
+position: fixed;
+bottom: 0px;
+left: 0px;
+width: calc(100% - 20px);
+}
+
+@media screen and (min-width: 800px) {
+.pup_button {
+width: calc(50% - 20px);
+}
+}
+
+.create_dashboard_section .pup_button {
+width: calc(100% - 20px);
+}
+
+.shortcut_button{
+width: calc(30% - 10px);
+height: 20px;
+margin: 2px;
+}
+</style>
+
+</head>
+<body>
+<script>
+
+window.onload = function () {
+let serverIP = '0.0.0.0:0';
+var widgetData;
+var widgetGroup = 'default';
+var widgetGroupName = 'Default';
+var showEdit = false;
+
+var sampleWidgets = [];
+sampleWidgets[0] = {};
+sampleWidgets[0].wid = Date.now();
+sampleWidgets[0].name = 'Sample Lower third';
+sampleWidgets[0].type = 'lower-third';
+sampleWidgets[0].line1 = 'Text for line 1';
+sampleWidgets[0].image = 'lower-third';
+
+sampleWidgets[1] = {};
+sampleWidgets[1].wid = Date.now() + 1;
+sampleWidgets[1].name = 'Sample Upper slider';
+sampleWidgets[1].type = 'upper-slide';
+sampleWidgets[1].line1 = 'Text for line 1';
+
+sampleWidgets[2] = {};
+sampleWidgets[2].wid = Date.now() + 2;
+sampleWidgets[2].name = 'Sample Countdown';
+sampleWidgets[2].type = 'countdown';
+sampleWidgets[2].line1 = 'Program starts in:';
+sampleWidgets[2].line2 = '90';
+		
+let statusBar = document.querySelector("#is_live");
+let takeButton = document.querySelector("#take_button");
+let saveWidget = document.querySelector("#save_widget");
+let newWidget = document.querySelector("#new_widget");
+let removeWidget = document.querySelector("#remove_widget");
+let newLowerThird = document.querySelector("#new_lower_third");
+let newAlertSlider = document.querySelector("#new_alert_slider");
+let newCountdown = document.querySelector("#new_countdown");
+let pupPanel = document.querySelector("#pop_up_panel_master");
+let editHideShow = document.querySelector("#edit_button");
+let changeDashboard = document.querySelector("#dashboard_button");
+let newDashButton = document.querySelector("#new_dash_button");
+let pupCloseButton = document.querySelector("#close_pup_panel");
+let shortcutButton = document.querySelector("#shortcut_button");
+
+let widgetButton;
+let lid;
+
+let selectedButton = -1;
+
+buildButtonGroups();
+
+(async () => {
+	let dash;
+	
+	try {
+		if (widgetGroup == "default") {
+			dash = await showDashboardSelector();
+		} else {
+			dash = true;
+			widgetGroupName = widgetGroup;
+		}
+		if (dash) {
+			await buildButtons();
+		}
+	} catch(e) {
+		//console.log(e);
+	}
+	
+	lid = window.setTimeout(checkBusy,1000);
+	
+})();
+
+var shiftDown = false;
+var controlDown = false;
+var altDown = false;
+var keyDown = null;
+var keyCapture = false;
+
+function isModifierKey(key) {
+	if (key.indexOf('Shift') > -1 || key.indexOf('Control') > -1 || key.indexOf('Alt') > -1) {
+		return true;
+	}
+	
+	return false;
+}
+
+document.onkeydown = (key) => {
+	if (key.code == 'ShiftLeft' || key.code == 'ShiftRight') {
+		shiftDown = true;
+	}
+	if (key.code == 'ControlLeft' || key.code == 'ControlRight') {
+		controlDown = true;
+	}
+	if (key.code == 'AltLeft' || key.code == 'AltRight') {
+		altDown = true;
+	}
+	
+	keyDown = key.code;
+	
+	
+	//console.log(`${key.code} down`);
+}
+
+document.onkeyup = (key) => {
+	//console.log(`${key.code} up`);
+	
+	if (keyCapture) {
+		let shortcut = document.querySelector("input[name='shortcut']");
+		if (shortcut && keyDown && !isModifierKey(keyDown)) {
+			let shortKey = [];
+			
+			if (controlDown) {
+				shortKey.push('Control');
+			}
+			if (altDown) {
+				shortKey.push('Alt');
+			}
+			if (shiftDown) {
+				shortKey.push('Shift');
+			}
+			
+			shortKey.push(keyDown);
+			
+			shortcut.value = shortKey.join('+');
+		}
+		
+		key.preventDefault();
+	} else {
+
+		if (!showEdit) {
+			if (shiftDown && key.code == 'KeyT') {
+				takeButton.onclick();
+			} else if (shiftDown && key.code == 'KeyE') {
+				editHideShow.onclick();
+			} else if (shiftDown && key.code == 'KeyD') {
+				selectDash();
+			} else {
+				
+				if (widgetData) {
+					for (let i = 0; i < widgetData.length; i++) {
+						
+						if (widgetData[i].hasOwnProperty('shortcut') && keyDown == widgetData[i].shortcut) {
+							
+							//console.log(widgetData[i].wid);
+							
+							let widgetButton = document.querySelector(`div[wid='${widgetData[i].wid}']`);
+							if (widgetButton) {
+								widgetButton.onclick();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	keyDown = null;
+	if (key.code == 'ShiftLeft' || key.code == 'ShiftRight') {
+		shiftDown = false;
+	}
+	if (key.code == 'ControlLeft' || key.code == 'ControlRight') {
+		controlDown = false;
+	}
+	if (key.code == 'AltLeft' || key.code == 'AltRight') {
+		altDown = false;
+	}
+}
+
+shortcutButton.onclick = () => {
+	keyCapture = !keyCapture;
+	
+	let shortcutInput = document.querySelector("input[name='shortcut']");
+	
+	if (keyCapture) {
+		shortcutInput.classList.add('text_input_red');
+		shortcutButton.classList.add('button_live');
+		
+		shiftDown = false;
+		controlDown = false;
+		altDown = false;
+		
+	} else {
+		shortcutInput.classList.remove('text_input_red');
+		shortcutButton.classList.remove('button_live');
+	}
+}
+
+async function selectDash() {
+	let dash;
+	
+	try {
+		dash = await showDashboardSelector();
+		if (dash) {
+			removeButtons();
+			await buildButtons();
+		}
+	} catch(e) {
+		console.log(`Error selecting dashboard: ${e}`);
+	}
+}
+
+newLowerThird.onclick = () => {
+	updateEdit(null,0);
+};
+newAlertSlider.onclick = () => {
+	updateEdit(null,1);
+};
+newCountdown.onclick = () => {
+	updateEdit(null,2);
+};
+statusBar.onclick = () => {
+	document.documentElement.requestFullscreen();
+}
+
+newDashButton.onclick = () => {
+
+	(async () => {
+		let newDash = document.querySelector('#dashboard_name');
+		newDash = newDash.value;
+		newDash = encodeURIComponent(newDash);
+		
+		const resp = await fetch(`http://${serverIP}/dashboard?create=${newDash}`);
+		let respObj = await resp.json();
+		console.log(respObj);
+		window.location = `http://${serverIP}/dashboard/${respObj.dashboard}`
+	})();
+}
+
+editHideShow.onclick = () => {
+	let editPanel = document.querySelector("#panel2");
+	let editButton = document.querySelector("#edit_button");
+	
+	if (editPanel) {
+		if (editPanel.style.display == 'none') {
+			editPanel.style.display = '';
+			editButton.innerText = "Hide Edit";
+			showEdit = true;
+		} else {
+			editPanel.style.display = 'none';
+			editButton.innerText = "Show Edit";
+			showEdit = false;
+		}
+	}
+}
+
+changeDashboard.onclick = () => {
+
+	(async () => {
+		await selectDash();
+	})();
+}
+
+takeButton.onclick = () => {
+	if (selectedButton < 0) {
+		return;
+	}
+	
+	let widgetButton = document.querySelectorAll("#widget_button");
+	
+	console.log(selectedButton);
+	
+	let wid = widgetButton[selectedButton].getAttribute('wid');
+	let action = widgetButton[selectedButton].getAttribute('type');
+	let indx = widgetButton[selectedButton].getAttribute('indx');
+	//widgetButton[selectedButton].getAttribute('name');
+	//let image = widgetButton[selectedButton].getAttribute('image');
+	if (action == 'action') {
+		let actionType = widgetData[indx].line1;
+		let replayDate = widgetData[indx].line2;
+		
+			if (actionType == 'replay') {
+				(async () => {
+					let replayStatus = await actionReplay(replayDate);
+					
+					if (!replayStatus) {
+						widgetButton[selectedButton].classList.add('button_clicked_err');
+					}
+					
+					//window.setTimeout(function() {
+						//widgetButton[selectedButton].classList.remove('button_clicked_err');
+					//},2000);
+				})();
+			}
+		console.log('Action Button');
+	} else {
+		fireTrigger(wid);
+	}
+	//selectedButton = -1;
+	
+	takeButton.classList.add('button_live');
+	
+	let takeTime = window.setTimeout(() => {
+		takeButton.classList.remove('button_live');
+	},2000);
+}
+
+saveWidget.onclick = () => {
+
+	(async () => {
+		saveWidget.classList.add('button_clicked');
+		
+		let success = await saveWidgetData(widgetGroup);
+		
+		if (!success) {
+			saveWidget.classList.remove('button_clicked');
+			saveWidget.classList.add('button_clicked_err');
+		}
+		
+		removeButtons();
+		
+		await buildButtons();
+		
+		window.setTimeout(() => {
+			saveWidget.classList.remove('button_clicked');
+			saveWidget.classList.remove('button_clicked_err');
+		},1000);
+	})();
+}
+
+newWidget.onclick = () => {
+	let wid = Date.now();
+	
+	(async () => {
+		newWidget.classList.add('button_clicked');
+		
+		let success = await saveWidgetData(widgetGroup, wid);
+		
+		if (!success) {
+			newWidget.classList.remove('button_clicked');
+			newWidget.classList.add('button_clicked_err');
+		}
+		
+		removeButtons();
+		
+		await buildButtons();
+		
+		window.setTimeout(() => {
+			newWidget.classList.remove('button_clicked');
+			newWidget.classList.remove('button_clicked_err');
+		},1000);
+	})();
+}
+
+removeWidget.onclick = () => {
+	(async () => {
+		removeWidget.classList.add('button_clicked');
+	
+		let widgetButton = document.querySelectorAll("#widget_button");
+		
+		let wid = widgetButton[selectedButton].getAttribute('wid');
+		
+		if (wid) {
+			await removeWidgetData(widgetGroup, wid);
+		}
+		
+		removeButtons();
+		buildButtons();
+		
+		window.setTimeout(() => {
+			removeWidget.classList.remove('button_clicked');
+			removeWidget.classList.remove('button_clicked_err');
+		},1000);
+	})();
+}
+
+function updateEdit(indx = -1, sampleIndx = -1) {
+	let widgetEdit = document.querySelectorAll("#widget_edit");
+	
+	for (let i = 0; i < widgetEdit.length; i++) {
+		let wAtt = widgetEdit[i].getAttribute('name');
+		if (indx !== null && indx >= 0) {
+			if (widgetData[indx][wAtt]) {
+				widgetEdit[i].value = widgetData[indx][wAtt];
+			} else {
+				widgetEdit[i].value = '';
+			}
+		} else if (sampleIndx !== null && sampleIndx >= 0) {
+			if (sampleWidgets[sampleIndx][wAtt]) {
+				widgetEdit[i].value = sampleWidgets[sampleIndx][wAtt];
+			} else {
+				widgetEdit[i].value = '';
+			}
+		} else {
+			widgetEdit[i].value = '';
+		}
+	}
+}
+
+async function actionReplay(replayDate = null) {
+	// Check to see if replay is busy.
+	let resp = await fetch(`http://${serverIP}/replay`);
+	let respObj = await resp.json();
+	
+	if (!respObj) {
+		return false;
+	}
+
+	if (respObj.hasOwnProperty('busy') && respObj.busy) {
+		return false;
+	}
+
+	// If replay is not busy, generate it.
+	if (replayDate) {
+		resp = await fetch(`http://${serverIP}/replay/?create=${replayDate}`);
+	} else {
+		resp = await fetch(`http://${serverIP}/replay/?create`);
+	}
+	
+	respObj = await resp.json();
+	
+	console.log(respObj);
+	
+	return true;
+}
+
+async function saveWidgetData(dataGroup, newID = null) {
+	let widgetEdit = document.querySelectorAll("#widget_edit");
+	
+	let widgetObj = {};
+	
+	for (let i = 0; i < widgetEdit.length; i++) {
+		let wAtt = widgetEdit[i].getAttribute('name');
+		if (widgetEdit[i].value) {
+			widgetObj[wAtt] = widgetEdit[i].value;
+		} else {
+			widgetObj[wAtt] = '';
+		}
+	}
+	
+	if (newID) {
+		widgetObj.wid = newID;
+	}
+	
+	widgetObj = JSON.stringify(widgetObj);
+	widgetObj = encodeURIComponent(widgetObj);
+	
+	const resp = await fetch(`http://${serverIP}/widget/attributes?save=${widgetObj}&group=${dataGroup}`);
+	let respObj = await resp.json();
+	console.log(respObj);
+	
+	if (respObj.success) {
+		return true;
+	}
+	
+	return false;
+}
+
+async function removeWidgetData(dataGroup, wid) {
+	
+	const resp = await fetch(`http://${serverIP}/widget/attributes?remove=${wid}&group=${dataGroup}`);
+	let respObj = await resp.json();
+	console.log(respObj);
+	
+	if (respObj.success) {
+		return true;
+	}
+	
+	return false;
+}
+
+async function loadWidgetData(dataGroup) {
+	const resp = await fetch(`http://${serverIP}/widget/attributes?load=${widgetGroup}&group=${dataGroup}`);
+	let respObj = await resp.json();
+	let widgetData = respObj.data;
+	widgetData = decodeURIComponent(widgetData);
+	
+	try {
+		widgetData = JSON.parse(widgetData);
+	} catch(e) {
+		console.log(`Error parsing widget data: ${e}.`);
+		return null;
+	}
+	
+	//console.log(widgetData);
+	
+	return widgetData;
+	
+}
+
+async function checkBusy() {
+	try {
+		const resp = await fetch(`http://${serverIP}/busy`);
+		let respObj = await resp.json();
+		let wid = [];
+		//console.log(respObj);
+		let widgetButton = document.querySelectorAll("#widget_button");
+		
+		if (respObj) {
+			for (let i = 0; i < respObj.length; i++) {
+				if (respObj[i].hasOwnProperty('wid') && respObj[i].hasOwnProperty('busy') && respObj[i].busy) {
+					wid.push(decodeURIComponent(respObj[i].wid));
+				}
+			}
+			//console.log(`Looking for buttons: ${JSON.stringify(wid)}.`);
+			
+			takeButton.classList.remove('button_live');
+			
+			for (let i = 0; i < widgetButton.length; i++) {
+				if (wid.indexOf(widgetButton[i].getAttribute('wid')) > -1) {
+					widgetButton[i].classList.add('button_live');					
+				} else {
+					widgetButton[i].classList.remove('button_live');
+				}
+			}
+		} else {
+			for (let i = 0; i < widgetButton.length; i++) {
+				//if (i != selectedButton) {
+					widgetButton[i].classList.remove('button_live');
+				//}
+			}
+			
+		}
+		
+		if (respObj.live) {
+			statusBar.innerText = `Status: Active.`;
+		} else {
+			statusBar.innerText = 'Status: Waiting...';
+		}
+
+	} catch (e) {
+		console.log(e);
+	}
+
+	lid = window.setTimeout(checkBusy,1000);
+
+}
+
+async function fireTrigger(wid) {
+	try {
+		wid = encodeURIComponent(wid);
+		group = encodeURIComponent(widgetGroup);
+		
+		const resp = await fetch(`http://${serverIP}/fire?wid=${wid}&group=${widgetGroup}`);
+		let respObj = await resp.json();
+		//console.log(respObj);
+
+		//widgetButton.classList.add('button_busy');
+
+	} catch (e) {
+		console.log(e);
+	}
+}
+
+function buildButtonGroups(groups) {
+	groups = ['lower-third','upper-slide','countdown','action'];
+	//groups = [];
+	
+	// Loop through current widgetData and make a list of group/types
+	//for (let i = 0; i < widgetData.length; i++) {
+	//	let group = widgetData[i].type;
+	//	if (groups.indexOf(group) < 0) {
+	//		groups.push(group);
+	//	}
+	//}
+	
+	let buttonGroupFrame = document.querySelector('#button_frame');
+	let buttonGroupTemplate = document.querySelector('#button_group_master_template');
+		
+	for (let i = 0; i < groups.length; i++) {
+		let newButtonGroup = buttonGroupTemplate.cloneNode(true);
+		let newButtonGroupTitle = newButtonGroup.querySelector('#button_group_title');
+		let newButtonGroupPanel = newButtonGroup.querySelector('#button_group_panel');
+		
+		newButtonGroup.setAttribute('id',`button_group_master_${groups[i]}`);
+		newButtonGroup.style.display = '';
+		
+		if (groups[i] == 'lower-third') {
+			newButtonGroupTitle.innerText = 'Lower third';
+		} else if (groups[i] == 'upper-slide') {
+			newButtonGroupTitle.innerText = 'Alert Slider';
+		} else if (groups[i] == 'countdown') {
+			newButtonGroupTitle.innerText = 'Countdown';
+		} else if (groups[i] == 'action') {
+			newButtonGroupTitle.innerText = 'Action';
+		}
+		
+		newButtonGroupPanel.setAttribute('id',`button_group_panel_${groups[i]}`);
+		
+		newButtonGroup.style.display = 'none';
+		
+		buttonGroupFrame.appendChild(newButtonGroup);
+	}
+}
+
+async function buildButtons() {
+	widgetData = await loadWidgetData(widgetGroup);
+	let noDashboard = document.querySelector("#dashboard_not_found");
+	
+	let currentDashboard = document.querySelector("#current_dashboard");
+	currentDashboard.innerText = widgetGroupName;
+	
+	// Hide all button groups
+	let buttonGroupMasters = document.querySelectorAll(`[id^="button_group_master_"]`);
+	buttonGroupMasters.forEach(elem => {
+		elem.style.display = 'none';
+	});
+	
+	if (!widgetData) {
+		
+		noDashboard.style.display = '';
+		return;
+	} else {
+		noDashboard.style.display = 'none';
+	}
+	
+	//let buttonFrame = document.querySelector('#button_frame');
+	
+	//console.log(widgetData);
+	let widgetButtons = document.querySelectorAll(`#widget_button`);
+	
+	for (let i = 0; i < widgetData.length; i++) {
+		let buttonGroupMaster = document.querySelector(`#button_group_master_${widgetData[i].type}`);
+		buttonGroupMaster.style.display = '';
+		
+		let buttonGroupFrame = document.querySelector(`#button_group_panel_${widgetData[i].type}`);
+		
+		let newButton = null; 
+		
+		if (widgetButtons.length || i < widgetButtons.length) {
+			newButton = widgetButtons[i];
+		}
+		
+		if (!newButton) {
+			newButton = document.querySelector('#button_template');
+			newButton = newButton.cloneNode(true);
+		}
+		
+		newButton.setAttribute('indx',i);
+		newButton.setAttribute('wid',widgetData[i].wid);
+		newButton.setAttribute('name',widgetData[i].name);
+		newButton.setAttribute('image',widgetData[i].image);
+		newButton.setAttribute('style','');
+		newButton.setAttribute('id',`widget_button`);
+		if (widgetData[i].type == 'action') {
+			newButton.setAttribute('type','action');
+		}
+		newButton.innerText = widgetData[i].name;
+		
+		buttonGroupFrame.appendChild(newButton);
+		
+		newButton.onclick = function() {
+			let widgetButton = document.querySelectorAll(`#widget_button`);
+			
+			for (let j = 0; j < widgetButton.length; j++) {
+				// indx is the widgetData index assigned to this button.
+				let indx = this.getAttribute('indx');
+				// wIndx is the widgetData index assigned to widgetButton[j];
+				let wIndx = widgetButton[j].getAttribute('indx');
+				
+				if (indx != wIndx) {
+					widgetButton[j].classList.remove('button_armed');
+				} else {
+					widgetButton[j].classList.add('button_armed');
+					selectedButton = j;
+				}
+			}
+			//selectedButton = i;
+			
+			// i is widgetData index for current button.
+			updateEdit(i);
+		};
+	}
+}
+
+function removeButtons() {
+	let widgetButtons = document.querySelectorAll(`#widget_button`);
+	
+	for (let i = 0; i < widgetButtons.length; i++) {
+		widgetButtons[i].textContent = '';
+		widgetButtons[i].remove();
+	}
+}
+
+async function buildDashboardSelectorButtons() {
+	let buttonTemplate = document.querySelector("#dash_buttons_template");
+	let buttonParent = document.querySelector("#pup_buttons");
+	
+	// Remove dash_buttons
+	let buttons = document.querySelectorAll("#dash_buttons");
+	for (let i = 0; i < buttons.length; i++) {
+		buttons[i].textContent = '';
+		buttons[i].remove();
+	}
+	
+	// Get dashboards
+	const resp = await fetch(`http://${serverIP}/dashboard?list`);
+	let dashboards = await resp.json();
+	
+	if (dashboards.length <= 0) {
+		return false;
+	}
+	
+	// Build Dashboard button list
+	for (let i = 0; i < dashboards.length; i++) {
+		let newButton = buttonTemplate.cloneNode(true);
+		
+		newButton.setAttribute('id', 'dash_buttons');
+		newButton.setAttribute('group', dashboards[i].route);
+		newButton.innerText = dashboards[i].name;
+		newButton.style.display = '';
+		
+		buttonParent.appendChild(newButton);
+	
+	}
+	
+}
+
+async function showDashboardSelector() {
+	return new Promise((resolve,reject) => {
+		(async () => {
+			await buildDashboardSelectorButtons();
+			
+			let buttons = document.querySelectorAll("#dash_buttons");
+			
+			if (pupPanel) {
+				pupPanel.style.display = "";
+			}
+			
+			for (let i = 0; i < buttons.length; i++) {
+				buttons[i].onclick = function() {
+					let group = this.getAttribute("group");
+					widgetGroup = group;
+					widgetGroupName = this.innerText;
+					resolve(true);
+					pupPanel.style.display = "none";
+				};
+			}
+			
+			pupCloseButton.onclick = function() {
+				if (pupPanel) {
+					reject(false);
+					pupPanel.style.display = "none";
+				}
+			}
+
+		})();
+	});
+}
+
+}
+</script>
+
+<div id="pop_up_panel_master" class="pup_master" style="display: none">
+	
+	<div id="create_dashboard_section" class="create_dashboard_section">
+		<div id="pup_title" class="pup_title">Select Dashboard:</div>		
+		<div id="pup_buttons" class="pup_buttons">
+			<div id="dash_buttons_template" class="button pup_button" style="display: none"></div>
+		</div>
+	</div>
+	
+	<div id="create_dashboard_section" class="create_dashboard_section">
+		<div id="pup_title" class="pup_title">Create / Remove Dashboard:</div>		
+		<input type="text" id="dashboard_name" class="text_input" name="dashboard_name" placeholder="Dashboard name"></input>
+		<div id="new_dash_button" class="button pup_button">Create Dashboard</div>
+		<div id="remove_dash_button" class="button button_red pup_button">Remove Current</div>
+	</div>
+	<div id="close_pup_panel" class="button pup_button">Close</div>
+</div>
+
+<div id="top_panel" class="take_panel">
+	<div id="take_button" class="button take_button">Take</div>
+	<div id="is_live" class="status"></div>
+</div>
+
+<div id="top_buttons" class="top_panel">
+<div id="current_dashboard" class="status"></div>
+<div id="dashboard_button" class="thin_button">Dashboard</div>
+<div id="edit_button" class="thin_button">Show Edit</div>
+</div>
+
+<div id="master_panel" class="master_panel">
+
+	<div id="panel1" class="panel">
+		<div id="button_frame" class="button_frame">
+			
+			<div id="dashboard_not_found" class="dashboard_error" style="display: none">Dashboard does not exist. Start building this dashboard by Saving a new button from the available widget sample types below.</div>
+			
+			<div id="button_template" class="button" indx=0 name="template_button" image="lower-third" style="display:none">Template Button</div>
+			
+			<div id="button_group_master_template" class="button_group" style="display: none">
+			<div id="button_group_title" class="button_group_title">Button Group</div>
+			<div id="button_group_panel" class="button_group_panel"></div>
+			</div>
+			
+		</div>
+	</div>
+	
+	<div id="panel2" class="panel" style="display: none">
+		<div id="edit_frame" class="button_frame">
+			
+			<div id="label" class="label">Widget Type</div>
+			<input type="text" id="widget_edit" class="text_input" name="type" placeholder="Type"></input>
+			
+			<div id="label" class="label">Button Name</div>
+			<input type="text" id="widget_edit" class="text_input" name="name" placeholder="Name"></input>
+			
+			<div id="label" class="label">Widget Parameter 1</div>
+			<input type="text" id="widget_edit" class="text_input" name="line1" placeholder="Line 1" required></input>
+			
+			<div id="label" class="label">Widget Parameter 2</div>
+			<input type="text" id="widget_edit" class="text_input" name="line2" placeholder="Line 2"></input>
+			
+			<div id="label" class="label">Widget Parameter 3</div>
+			<input type="text" id="widget_edit" class="text_input" name="line3" placeholder="Line 3"></input>
+			
+			<div id="label" class="label">Widget Background Image</div>
+			<input type="text" id="widget_edit" class="text_input" name="image" placeholder="Image"></input>
+
+			<div id="label" class="label">Widget Font</div>
+			<input type="text" id="widget_edit" class="text_input" name="font" placeholder="Font"></input>
+			
+			<div id="label" class="label">Widget Sound</div>
+			<input type="text" id="widget_edit" class="text_input" name="sound" placeholder="Sound"></input>
+			
+			<div id="label" class="label">Widget Shortcut</div>
+			<input type="text" id="widget_edit" class="text_input" name="shortcut" placeholder="Keyboard Shortcut" readonly style="width: calc(70% - 10px);"></input>
+			<div id="shortcut_button" class="button shortcut_button">Key</div>
+			
+			<div id="label" class="label">Widget Expression +-*(parens){vars}</div>
+			<input type="text" id="widget_edit" class="text_input" name="expression" placeholder="Expression +-*(parens){vars}"></input>
+			
+			<div id="label" class="label">Widget ID (read-only)</div>
+			<input type="text" id="widget_edit" class="text_input" name="wid" placeholder="Widget ID" readonly></input>
+			
+			<div id="save_widget" class="button">Save</div>
+			<div id="new_widget" class="button">Save As New</div>
+			<div id="remove_widget" class="button button_red">Remove</div>
+			<div id="new_lower_third" class="button">New Lower third</div>
+			<div id="new_alert_slider" class="button">New Alert slider</div>
+			<div id="new_countdown" class="button">New Countdown</div>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>
